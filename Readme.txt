@@ -1,16 +1,5 @@
-# Install git and clone your project
-sudo yum install git
-git clone -b master --single-branch https://github.com/Birendrakum/AWS-Project.git
-
-#Install python3, django and other dependencies
-sudo yum install python3 python3-pip
-pip install django boto3 django-storages[boto3]
-
 #Go to AWS-project
 cd AWS-Project/
-
-#Install nginx
-sudo yum install nginx
 
 # open django.conf file and in server_name give ur ec2 public ip
 
