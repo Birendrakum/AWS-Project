@@ -1,10 +1,10 @@
 # Install git and clone your project
-sudo yum install git
-git clone -b master --single-branch https://github.com/Birendrakum/AWS-Project.git
+sudo yum install git -y
+sudo -u ec2-user git clone -b master --single-branch https://github.com/Birendrakum/AWS-Project.git
 
 #Install python3, django and other dependencies
-sudo yum install python3 python3-pip
+sudo yum install python3 python3-pip -y
 pip install django boto3 django-storages[boto3]
 
 #Install nginx
-sudo yum install nginx
+sudo yum install nginx -y
