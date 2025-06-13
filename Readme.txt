@@ -2,6 +2,7 @@
 cd AWS-Project/
 
 # open django.conf file and in server_name give ur ec2 public ip
+sudo sed -i "s/server_name .*;/server_name $PUBLIC_IP;/g" /home/ec2-user/AWS-Project/django.conf
 
 #copy django.conf inside AWS-Project directory to /etc/nginx/conf.d
 cp ./django.conf /etc/nginx/conf.d
