@@ -123,10 +123,10 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # AWS S3 Settings
-AWS_ACCESS_KEY_ID = '***'
-AWS_SECRET_ACCESS_KEY = '***'
-AWS_STORAGE_BUCKET_NAME = '**'
-AWS_S3_REGION_NAME = '**'  
+AWS_ACCESS_KEY_ID = '$access_key'
+AWS_SECRET_ACCESS_KEY = '$secret_key'
+AWS_STORAGE_BUCKET_NAME = 'buuccket1'
+AWS_S3_REGION_NAME = 'us-east-1'  
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
 
 # Use S3 for media storage
