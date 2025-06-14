@@ -11,9 +11,12 @@ cp ./django.conf /etc/nginx/conf.d
 sudo systemctl restart nginx
 
 # Add your access key, secret key, bucket name and region in settings.py file
-# Also in Hostname give '*'
 cd webpage_code/
 sudo nano ./myproject/settings.py
+secret_key=$(aws secretsmanager get-secret-value --secret-id "Secret_key" --query "SecretString" --output text)
+access_key=$(aws secretsmanager get-secret-value --secret-id "Access_key" --query "SecretString" --output text)
+sudo sed -i "s/AWS_ACCESS_KEY_ID .*;/AWS_ACCESS_KEY_ID = '$access_key';/g" /home/ec2-user/AWS-Project/Webpage_code/myproject/settings.py
+sudo sed -i "AWS_SECRET_ACCESS_KEY .*;/AWS_SECRET_ACCESS_KEY = '$secret_key';/g" /home/ec2-user/AWS-Project/Webpage_code/myproject/settings.py
 
 # start django server
 python3 manage.py makemigrations
