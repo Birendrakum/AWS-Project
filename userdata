@@ -1,40 +1,50 @@
+#!/bin/bash
+exec > /tmp/user-data.log 2>&1
+echo "Starting user-data script..."
+
 # Install git and clone your project
-sudo yum install git -y
-sudo -u ec2-user git clone -b master --single-branch https://github.com/Birendrakum/AWS-Project.git
+sudo yum install -y git
+sudo -u ec2-user git clone -b master --single-branch https://github.com/Birendrakum/AWS-Project.git /home/ec2-user/AWS-Project
 
-#Install python3, django and other dependencies
-sudo yum install python3 python3-pip -y
-pip install django boto3 django-storages[boto3]
+# Install Python3, pip, and jq (needed for JSON parsing)
+sudo yum install -y python3 python3-pip jq
 
-#Install nginx
-sudo yum install nginx -y
+# Install Django and other Python packages
+sudo -H pip3 install django boto3 django-storages[boto3]
 
-#Go to AWS-project
-cd AWS-Project/
+# Install nginx
+sudo yum install -y nginx
 
-# open django.conf file and in server_name give ur ec2 public ip
+# Go to the AWS-Project directory
+cd /home/ec2-user/AWS-Project
+
+# Retrieve the EC2 public IP and update django.conf accordingly
 PUBLIC_IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
-sudo sed -i "s/server_name .*;/server_name $PUBLIC_IP;/g" /home/ec2-user/AWS-Project/django.conf
+sudo sed -i "s/server_name .*;/server_name $PUBLIC_IP;/g" django.conf
 
-#copy django.conf inside AWS-Project directory to /etc/nginx/conf.d
-cp ./django.conf /etc/nginx/conf.d
+# Copy the updated django.conf to the nginx configuration directory
+sudo cp django.conf /etc/nginx/conf.d/
 
-#Restart nginx
+# Restart nginx to load the new configuration
 sudo systemctl restart nginx
 
-# Add your access key, secret key, bucket name and region in settings.py file
+# Navigate to the Django project directory
 cd webpage_code/
-sudo nano ./myproject/settings.py
+
+# Fetch AWS secrets from Secrets Manager (replace "secret1" with your secret's ID)
 SECRET_JSON=$(aws secretsmanager get-secret-value --secret-id "secret1" --query "SecretString" --output text)
+
+# Parse the secret JSON to get individual keys
 ACCESS_KEY=$(echo $SECRET_JSON | jq -r '.Access_key')
 SECRET_KEY=$(echo $SECRET_JSON | jq -r '.Secret_key')
-sudo sed -i "s/AWS_ACCESS_KEY_ID .*;/AWS_ACCESS_KEY_ID = '$access_key';/g" /home/ec2-user/AWS-Project/Webpage_code/myproject/settings.py
-sudo sed -i "AWS_SECRET_ACCESS_KEY .*;/AWS_SECRET_ACCESS_KEY = '$secret_key';/g" /home/ec2-user/AWS-Project/Webpage_code/myproject/settings.py
 
-# start django server
+# Inject the retrieved keys into your Django settings.py file
+sudo sed -i "s/AWS_ACCESS_KEY_ID .*;/AWS_ACCESS_KEY_ID = '$ACCESS_KEY';/g" myproject/settings.py
+sudo sed -i "s/AWS_SECRET_ACCESS_KEY .*;/AWS_SECRET_ACCESS_KEY = '$SECRET_KEY';/g" myproject/settings.py
+
+# Apply Django migrations and start the Django server binding to all network interfaces
 python3 manage.py makemigrations
 python3 manage.py migrate
-python3 manage.py runserver
+python3 manage.py runserver 0.0.0.0:8000
 
-#Access ur website
-Copy the public ip of your ec2 and access it in incognito mode
+echo "Setup complete. Access your website using http://$PUBLIC_IP:8000"
