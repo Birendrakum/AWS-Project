@@ -43,8 +43,9 @@ ACCESS_KEY=$(echo $SECRET_JSON | jq -r '.Access_key')
 SECRET_KEY=$(echo $SECRET_JSON | jq -r '.Secret_key')
 
 # Inject the retrieved keys into your Django settings.py file
-sudo sed -i "s/AWS_ACCESS_KEY_ID .*;/AWS_ACCESS_KEY_ID = '$ACCESS_KEY';/g" myproject/settings.py
-sudo sed -i "s/AWS_SECRET_ACCESS_KEY .*;/AWS_SECRET_ACCESS_KEY = '$SECRET_KEY';/g" myproject/settings.py
+sudo sed -i "s/^AWS_ACCESS_KEY_ID\s*=.*/AWS_ACCESS_KEY_ID = '$ACCESS_KEY'/" /home/ec2-user/AWS-Project/Webpage_code/myproject/settings.py
+sudo sed -i "s/^AWS_SECRET_ACCESS_KEY\s*=.*/AWS_SECRET_ACCESS_KEY = '$SECRET_KEY'/" /home/ec2-user/AWS-Project/Webpage_code/myproject/settings.py
+
 
 # Apply Django migrations and start the Django server binding to all network interfaces
 python3 manage.py makemigrations
