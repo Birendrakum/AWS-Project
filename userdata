@@ -18,8 +18,12 @@ sudo yum install -y nginx
 # Go to the AWS-Project directory
 cd /home/ec2-user/AWS-Project
 
-# Retrieve the EC2 public IP and update django.conf accordingly
-PUBLIC_IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
+# First, retrieve a token from the metadata service with a 6-hour TTL
+TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
+# Then, use the token to fetch the public IP
+PUBLIC_IP=$(curl -s -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/public-ipv4)
+echo "Public IP: $PUBLIC_IP"
+
 sudo sed -i "s/server_name .*;/server_name $PUBLIC_IP;/g" django.conf
 
 # Copy the updated django.conf to the nginx configuration directory
