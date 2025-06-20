@@ -23,5 +23,4 @@ python3 manage.py makemigrations
 python3 manage.py migrate
 python3 manage.py runserver
 
-#Access ur website
-Copy the public ip of your ec2 and access it in incognito mode
+
