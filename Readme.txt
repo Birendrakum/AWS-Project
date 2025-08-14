@@ -1,5 +1,56 @@
-Automated Scalable AWS Infrastructure Deployment Using CloudFormation to launch website, that can upload and delete files inside S3.
-Implemented Infrastructure as code using Cloud Formation to launch a website.
-Integrated VPC, Subnets, Load Balancer, security group, S3 bucket, Auto Scaling Groups, EC2 instances, and CloudWatch Alarms for dynamic scaling and monitoring.
-Used AWS Secrets Manager to securely store AWS access key and secret key, which can be retrieved dynamically by applications at runtime.
-Created IAM roles to allow ec2 to make changes in AWS S3 bucket.
+🧱 Architecture Overview
+🔹 Networking
+Custom VPC (192.168.10.0/24) with DNS support.
+
+Subnets:
+Public: pub-a, pub-b for internet-facing resources.
+Private: pvt-a, pvt-b for backend EC2 instances.
+
+Routing:
+Public route table connected to an Internet Gateway.
+Private route table uses a NAT Gateway for secure outbound access.
+
+🔐 Security
+Security Groups:
+SgLB: Allows inbound HTTP traffic from the internet.
+SgWebapp: Restricts access to HTTP traffic from the Load Balancer only.
+
+IAM Role & Instance Profile:
+Grants EC2 access to Secrets Manager and S3 for secure credential retrieval.
+
+⚙️ Compute & Scaling
+🖥️ Launch Template
+Amazon Linux 2 AMI (ami-0953476d60561c955)
+
+Installs:
+Git, Python3, pip, Django, boto3, nginx
+Clones Django project from GitHub
+Retrieves secrets from AWS Secrets Manager
+Injects credentials into settings.py
+Configures nginx with EC2 public IP
+Starts Django server on 127.0.0.1:8000
+
+📈 Auto Scaling Group
+Launches EC2 instances in public subnets.
+Integrated with Target Group for load balancing.
+Min size: 1, Max size: 4
+Metrics collected every minute.
+
+⚖️ Load Balancing
+Application Load Balancer (ALB):
+Internet-facing, deployed across public subnets.
+Listener on port 80 forwards traffic to EC2 instances.
+
+Target Group:
+HTTP protocol on port 80
+Targets EC2 instances launched by ASG
+
+📊 Monitoring & Scaling Policies
+CloudWatch Alarms:
+HighCpu-alarm: Triggers scale-out when CPU > 70%
+LowCPU_Alarm: Triggers scale-in when CPU < 50%
+
+Scaling Policies:
+Scale out: +2 instances
+Scale in: -1 instance
+Cooldown: 120 seconds
