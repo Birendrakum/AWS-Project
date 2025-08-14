@@ -18,7 +18,7 @@ SgLB: Allows inbound HTTP traffic from the internet.
 SgWebapp: Restricts access to HTTP traffic from the Load Balancer only.
 
 IAM Role & Instance Profile:
-Grants EC2 access to Secrets Manager for secure credential retrieval and S3 access for storing and deleting files.
+Grants EC2 access to Secrets Manager for secure credential retrieval and a user with S3 access for storing and deleting files.
 
 ⚙️ Compute & Scaling
 🖥️ Launch Template
