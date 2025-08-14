@@ -12,25 +12,8 @@ sudo yum install -y python3 python3-pip jq
 # Install Django and other Python packages
 sudo -H pip3 install django boto3 django-storages[boto3]
 
-# Install nginx
-sudo yum install -y nginx
-
 # Go to the AWS-Project directory
 cd /home/ec2-user/AWS-Project
-
-# First, retrieve a token from the metadata service with a 6-hour TTL
-TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
-# Then, use the token to fetch the public IP
-PUBLIC_IP=$(curl -s -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/public-ipv4)
-echo "Public IP: $PUBLIC_IP"
-
-sudo sed -i "s/server_name .*;/server_name $PUBLIC_IP;/g" django.conf
-
-# Copy the updated django.conf to the nginx configuration directory
-sudo cp django.conf /etc/nginx/conf.d/
-
-# Restart nginx to load the new configuration
-sudo systemctl restart nginx
 
 # Navigate to the Django project directory
 cd webpage_code/
