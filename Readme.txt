@@ -24,11 +24,10 @@ Grants EC2 access to Secrets Manager for secure credential retrieval and S3 acce
 🖥️ Launch Template
 Amazon Linux 2 AMI (ami-0953476d60561c955)
 Installs : Git, Python3, pip, Django, boto3, nginx 
-Clones Django project from GitHub
-Retrive and inject public ip of ec2 into danjgo.conf and moved it inside nginx config folder.
+Clones Django project from GitHub.
 Retrieves secrets from AWS Secrets Manager
 Injects credentials into settings.py
-Starts Django server on 127.0.0.1:8000
+Starts Django server on 0.0.0.0:8000
 
 📈 Auto Scaling Group
 Launches EC2 instances in public subnets.
