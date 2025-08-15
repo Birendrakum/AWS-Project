@@ -263,7 +263,7 @@ Resources:
             sudo sed -i "s|^AWS_SECRET_ACCESS_KEY\s*=.*|AWS_SECRET_ACCESS_KEY = '$SECRET_KEY'|" /home/ec2-user/AWS-Project/Webpage_code/myproject/settings.py
 
             # Apply Django migrations and start the Django server binding to all network interfaces
-            nohup gunicorn python3 manage.py runserver 0.0.0.0:8000 > /home/ec2-user/django.log 2>&1 &
+            python3 manage.py runserver 0.0.0.0:8000
 
 
   AutoScalingGroup:
@@ -331,4 +331,5 @@ Resources:
       AdjustmentType: "ChangeInCapacity"
       ScalingAdjustment: -1
       Cooldown: 120    
+
 
