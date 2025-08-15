@@ -37,7 +37,7 @@ def download_file(request, id):
     try:
         file_obj = UploadedFile.objects.get(id=id)  # Fetch the file from DB
         filename = os.path.basename(file_obj.file.name)
-        file_url = f"https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/uploads/{filename}"
+        file_url = f"https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.{settings.AWS_S3_REGION_NAME}.amazonaws.com/{filename}"
         return JsonResponse({"file_url": file_url}, status=200)
     except UploadedFile.DoesNotExist:
         return JsonResponse({"error": "File not found"}, status=404)
