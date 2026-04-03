@@ -71,9 +71,10 @@ A fully automated AWS architecture to **upload**, **download**, and **delete** f
 
 ## 🧩 Key Highlights
 ✅ Secure architecture using **IAM** and **Secrets Manager**  
-✅ Automated scaling with **CloudWatch** and **Auto Scaling Group**  
+✅ Automated dynamic scaling with **CloudWatch** and **Auto Scaling Group**  
 ✅ Load-balanced traffic via **ALB**  
 ✅ Fully integrated **Django web app** with **S3 file operations**
+✅ Automated the secret injection using sed function.
 
 ---
 
