@@ -1,4 +1,5 @@
-Deploy a website that can upload, download and delete files from s3.
+# Deploy a website that can upload, download and delete files from s3.
+**Told**
 
 🧱 Architecture Overview
 🔹 Networking
